@@ -11,8 +11,8 @@ import java.util.stream.Collectors;
 public class InMemoryItemRepository implements ItemRepository {
 
     private long idCounter;
-    Map<Long, Item> items = new HashMap<>();
-    Map<Long, Set<Item>> ownerItems = new HashMap<>();
+    private final Map<Long, Item> items = new HashMap<>();
+    private final Map<Long, Set<Item>> ownerItems = new HashMap<>();
 
     @Override
     public Optional<Item> getById(long id) {
