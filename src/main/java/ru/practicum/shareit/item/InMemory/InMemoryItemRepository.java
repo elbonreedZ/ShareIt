@@ -1,7 +1,6 @@
-package ru.practicum.shareit.item;
+package ru.practicum.shareit.item.InMemory;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.item.api.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.*;
@@ -22,14 +21,14 @@ public class InMemoryItemRepository implements ItemRepository {
     @Override
     public Item create(Item item) {
         item.setId(getNextId());
-        ownerItems.computeIfAbsent(item.getOwner(), ownerId -> new HashSet<>()).add(item);
+        ownerItems.computeIfAbsent(item.getOwner().getId(), ownerId -> new HashSet<>()).add(item);
         items.put(item.getId(), item);
         return item;
     }
 
     @Override
     public Item update(Item item) {
-        Set<Item> existedOwnerItems = ownerItems.get(item.getOwner());
+        Set<Item> existedOwnerItems = ownerItems.get(item.getOwner().getId());
         existedOwnerItems.remove(item);
         existedOwnerItems.add(item);
         items.put(item.getId(), item);

@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.error.exception.DuplicateException;
 import ru.practicum.shareit.error.exception.NotFoundException;
-import ru.practicum.shareit.user.api.UserRepository;
+import ru.practicum.shareit.user.api.JpaUserRepository;
 import ru.practicum.shareit.user.api.UserService;
 import ru.practicum.shareit.user.dto.UserCreateDto;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
+    private final JpaUserRepository userRepository;
 
     @Override
     public List<UserDto> getAll() {
@@ -54,16 +54,17 @@ public class UserServiceImpl implements UserService {
                 existed.setEmail(dtoEmail);
             }
         }
-        userRepository.update(existed);
+        userRepository.save(existed);
         return UserMapper.toUserDto(existed);
     }
 
     @Override
     public void delete(long id) {
-        userRepository.delete(id);
+        userRepository.deleteById(id);
     }
 
-    private User findById(long id) {
+    @Override
+    public User findById(long id) {
         return userRepository.findById(id).orElseThrow(() -> {
             log.error("Пользователь c id {} не найден", id);
             return new NotFoundException(String.format("Пользователь c id %d не найден", id));
