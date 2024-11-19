@@ -21,7 +21,7 @@ public class BookingController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    BookingDto createBooking(@RequestBody @Valid BookingCreateDto bookingCreateDto,
+    public BookingDto createBooking(@RequestBody @Valid BookingCreateDto bookingCreateDto,
                              @RequestHeader("X-Sharer-User-Id") long bookerId) {
         log.info("Пришел Post запрос /bookings с телом: {} и заголовком X-Sharer-User-Id: {}",
                 bookingCreateDto, bookerId);
@@ -32,7 +32,7 @@ public class BookingController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    BookingDto changeStatus(@PathVariable long id, @RequestHeader("X-Sharer-User-Id") long ownerId,
+    public BookingDto changeStatus(@PathVariable long id, @RequestHeader("X-Sharer-User-Id") long ownerId,
                             @RequestParam(name = "approved") boolean isApproved) {
         log.info("Пришел Patch запрос /bookings с id: {}, заголовком X-Sharer-User-Id: {} и параметром isApproved: {}",
                 id, ownerId, isApproved);
@@ -43,7 +43,7 @@ public class BookingController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    BookingDto getById(@PathVariable long id, @RequestHeader("X-Sharer-User-Id") long userId) {
+    public BookingDto getById(@PathVariable long id, @RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Пришел Get запрос /bookings/{id} с id: {}, userId: {}", id, userId);
         BookingDto bookingDto = bookingService.getById(id, userId);
         log.info("Отправлен ответ Get /bookings/{id} с телом: {}", bookingDto);
@@ -51,7 +51,7 @@ public class BookingController {
     }
 
     @GetMapping
-    List<BookingDto> getAllByBooker(@RequestParam(required = false) State state, @RequestHeader("X-Sharer-User-Id") long bookerId) {
+    public List<BookingDto> getAllByBooker(@RequestParam(required = false) State state, @RequestHeader("X-Sharer-User-Id") long bookerId) {
         log.info("Пришел Get запрос /bookings userId: {}, state {} на получение всех бронирований арендатора",
                 bookerId, state);
         List<BookingDto> bookings = bookingService.getAllByRole(bookerId, state, UserRole.BOOKER);
@@ -60,7 +60,7 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    List<BookingDto> getAllByOwner(@RequestParam(required = false) State state, @RequestHeader("X-Sharer-User-Id") long ownerId) {
+    public List<BookingDto> getAllByOwner(@RequestParam(required = false) State state, @RequestHeader("X-Sharer-User-Id") long ownerId) {
         log.info("Пришел Get запрос /bookings/owner ownerId: {}, state {} на получение всех бронирований владельца",
                 ownerId, state);
         List<BookingDto> bookings = bookingService.getAllByRole(ownerId, state, UserRole.OWNER);

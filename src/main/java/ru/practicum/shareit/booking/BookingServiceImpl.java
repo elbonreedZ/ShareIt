@@ -50,10 +50,7 @@ public class BookingServiceImpl implements BookingService {
             log.error("Дата начала {} позже даты конца {} бронирования", start, end);
             throw new BadRequestException("Дата начала не может быть позже даты окончания бронирования");
         }
-        Booking booking = BookingMapper.toBooking(bookingCreateDto);
-        booking.setItem(item);
-        booking.setBooker(booker);
-        booking.setStatus(BookingStatus.WAITING);
+        Booking booking = BookingMapper.toBooking(bookingCreateDto, booker, BookingStatus.WAITING, item);
         return BookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 

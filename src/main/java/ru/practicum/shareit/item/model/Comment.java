@@ -24,5 +24,5 @@ public class Comment {
     @JoinColumn(name = "author_id")
     private User author;
     @Column(name = "date_of_creation")
-    LocalDate created = LocalDate.now();
+    private LocalDate created = LocalDate.now();
 }

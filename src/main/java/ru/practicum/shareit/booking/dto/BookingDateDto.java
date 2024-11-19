@@ -6,6 +6,6 @@ import java.time.LocalDateTime;
 
 @Data
 public class BookingDateDto {
-    LocalDateTime start;
-    LocalDateTime end;
+    private LocalDateTime start;
+    private LocalDateTime end;
 }
