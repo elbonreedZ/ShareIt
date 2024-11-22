@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.api.ItemService;
-import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.dto.ItemOwnerDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
+import ru.practicum.shareit.item.dto.*;
 
 import java.util.List;
 
@@ -21,9 +18,9 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping("/{id}")
-    public ItemDto getById(@PathVariable long id) {
+    public ItemWIthCommentsDto getById(@PathVariable long id) {
         log.info("Пришел Get запрос /items/{id} с id: {}", id);
-        ItemDto itemDto = itemService.getById(id);
+        ItemWIthCommentsDto itemDto = itemService.getById(id);
         log.info("Отправлен ответ Get /items/{id} с телом: {}", itemDto);
         return itemDto;
     }
@@ -48,10 +45,10 @@ public class ItemController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<ItemOwnerDto> getByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId) {
+    List<ItemWIthCommentsDto> getByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId) {
         log.info("Пришел Get запрос /items с заголовком X-Sharer-User-Id: {} " +
                 "на получение списка вещей пользователя", ownerId);
-        List<ItemOwnerDto> items = itemService.getByOwner(ownerId);
+        List<ItemWIthCommentsDto> items = itemService.getByOwner(ownerId);
         log.info("Отправлен ответ Get /items с телом: {} ", items);
         return items;
     }
@@ -63,6 +60,17 @@ public class ItemController {
         List<ItemDto> items = itemService.search(text);
         log.info("Отправлен ответ Get /items с результатом поиска: {} ", items);
         return items;
+    }
+
+    @PostMapping("/{itemId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    CommentDto addComment(@RequestBody CreateCommentDto createCommentDto, @PathVariable long itemId,
+                          @RequestHeader("X-Sharer-User-Id") long authorId) {
+        log.info("Пришел Post запрос /items/{itemId}/comment с телом: {}, заголовком X-Sharer-User-Id: {} " +
+                "и itemId: {}", createCommentDto, authorId, itemId);
+        CommentDto commentDto = itemService.addComment(createCommentDto, itemId, authorId);
+        log.info("Отправлен ответ Post /items/{itemId}/comment с телом: {}", commentDto);
+        return commentDto;
     }
 
 }
